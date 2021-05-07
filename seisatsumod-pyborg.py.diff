@@ -1,5 +1,5 @@
 --- pyborg.py.orig	2007-11-11 21:49:28.000000000 -0800
-+++ pyborg.py	2009-06-22 21:01:48.000000000 -0700
++++ pyborg.py	2009-06-24 15:43:31.000000000 -0700
 @@ -66,6 +66,28 @@
  	except ValueError, e:
  		pass
@@ -34,7 +34,7 @@
  	import cfgfile
  
 -	ver_string = "I am a version 1.1.0 PyBorg"
-+	ver_string = "I am a version 1.1.2 PyBorg, with Seisatsu's Mod v3.1.1"
++	ver_string = "I am a version 1.1.2 PyBorg, with Seisatsu's Mod v3.2"
  	saves_version = "1.1.0"
  
  	# Main command list
@@ -86,3 +86,13 @@
  						% ( " ".join(self.settings.aliases[command_list[1]]), command_list[1] )
  					else:
  						msg = "The alias %s is not known" % command_list[1][1:]
+@@ -996,7 +1018,8 @@
+ 		for x in xrange(0, len(sentence)):
+ 			if sentence[x] == "'":
+ 				sentence[x-1] = ""
+-				sentence[x+1] = ""
++				if x + 1 <= len(sentence):
++					sentence[x+1] = ""
+ 			if sentence[x] == ",":
+ 				sentence[x-1] = ""
+ 

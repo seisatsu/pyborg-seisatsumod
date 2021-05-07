@@ -296,11 +296,15 @@ class ModIRC(SingleServerIRCBot):
 		if body.lower().find(self.settings.myname.lower() ) != -1:
 			replyrate = replyrate * 2
 
-		#replace nicknames by "#nick"
+		# Replace nicknames with "#nick", but don't mangle normal body text.
 		if e.eventtype() == "pubmsg":
 			for x in self.channels[target].users():
-				if not body.startswith("!"):
-					body = body.replace(x, "#nick")
+				if len(x) > 2: # Don't bother with tiny words
+					body = body.replace(' ' + x + ' ', ' #nick ')
+					if body.startswith(x + ' '):
+						body = '#nick ' + body[len(x)+1:]
+					if body.endswith(' ' + x):
+						body = body[:(len(body))-(len(x)+1)] + ' #nick'
 		print body
 
 		# Ignore selected nicks

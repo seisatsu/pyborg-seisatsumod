@@ -1,5 +1,5 @@
 --- pyborg-irc.py.orig	2007-05-04 00:34:33.000000000 -0700
-+++ pyborg-irc.py	2009-06-22 21:01:01.000000000 -0700
++++ pyborg-irc.py	2009-06-24 15:34:35.000000000 -0700
 @@ -68,15 +68,16 @@
  
  	# Command list for this module
@@ -105,7 +105,7 @@
  
  		# WHOOHOOO!!
  		if target == self.settings.myname or source == self.settings.myname:
-@@ -255,11 +280,27 @@
+@@ -255,11 +280,31 @@
  		# Ignore self.
  		if source == self.settings.myname: return
  
@@ -125,16 +125,21 @@
 +		if body.lower().find(self.settings.myname.lower() ) != -1:
 +			replyrate = replyrate * 2
  
- 		#replace nicknames by "#nick"
+-		#replace nicknames by "#nick"
++		# Replace nicknames with "#nick", but don't mangle normal body text.
  		if e.eventtype() == "pubmsg":
  			for x in self.channels[target].users():
 -				body = body.replace(x, "#nick")
-+				if not body.startswith("!"):
-+					body = body.replace(x, "#nick")
++				if len(x) > 2: # Don't bother with tiny words
++					body = body.replace(' ' + x + ' ', ' #nick ')
++					if body.startswith(x + ' '):
++						body = '#nick ' + body[len(x)+1:]
++					if body.endswith(' ' + x):
++						body = body[:(len(body))-(len(x)+1)] + ' #nick'
  		print body
  
  		# Ignore selected nicks
-@@ -284,21 +325,9 @@
+@@ -284,21 +329,9 @@
  			print "Ignoring quoted text"
  			return
  
@@ -159,7 +164,7 @@
  
  		# Pass message onto pyborg
  		if source in self.owners and e.source() in self.owner_mask:
-@@ -355,6 +384,23 @@
+@@ -355,6 +388,23 @@
  						msg = msg + "off"
  						self.settings.stealth = 0
  

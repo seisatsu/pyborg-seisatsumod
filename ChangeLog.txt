@@ -1,17 +1,26 @@
 PyBorg ChangeLog
 ~~~~~~~~~~~~~~~~
 
+Seisatsu's Mod v3.2 (Bugfix) - 24/6/2009 (Michael D. Reiley / Seisatsu)
+
+~~~~~~~~~~~~~~~~~~
+
+* Fixed a bug which caused list assignment range errors to occur occasionally.
+* Fixed the "#nick" replacement filter to prevent messages from becoming mangled.
+
 Seisatsu's Mod v3.1.1 (v3.1 Bugfix) - 22/6/2009 (Michael D. Reiley / Seisatsu)
 
 ~~~~~~~~~~~~~~~~~~
 
 * Fixed a mistake in version 3.1 that prevented PyBorg from parsing commands.
+* Owner commands can now be used in public channels.
 
 Seisatsu's Mod v3.1 (Bugfix) - 22/6/2009 (Michael D. Reiley / Seisatsu)
 
 ~~~~~~~~~~~~~~~~~~
 
 * Fixed a programming oversight in the original source where nicknames were replaced with #nick BEFORE a portion of code in which PyBorg needed to check whether its nickname was in the message body. This prevented said code from working at all.
+* PyBorg now doubles its replyrate if its nickname is in the message body. (See above.)
 * Fixed changelog (Oops, I never added that inline nolearn feature after all.)
 
 Seisatsu's Mod v3 - 18/6/2009 (Michael D. Reiley / Seisatsu)
@@ -23,7 +32,7 @@ Seisatsu's Mod v3 - 18/6/2009 (Michael D. Reiley / Seisatsu)
 * Fixed a bug caused by the old color character filter.
 * Improved the special character filters.
 
-Seisatsu's Mod v2.1 (bugfix) - 2/6/2009 (Michael D. Reiley / Seisatsu)
+Seisatsu's Mod v2.1 (Bugfix) - 2/6/2009 (Michael D. Reiley / Seisatsu)
 
 ~~~~~~~~~~~~~~~~~~
 

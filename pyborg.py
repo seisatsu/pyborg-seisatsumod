@@ -122,7 +122,7 @@ class pyborg:
 	import re
 	import cfgfile
 
-	ver_string = "I am a version 1.1.2 PyBorg, with Seisatsu's Mod v3.1.1"
+	ver_string = "I am a version 1.1.2 PyBorg, with Seisatsu's Mod v3.2"
 	saves_version = "1.1.0"
 
 	# Main command list
@@ -1018,7 +1018,8 @@ class pyborg:
 		for x in xrange(0, len(sentence)):
 			if sentence[x] == "'":
 				sentence[x-1] = ""
-				sentence[x+1] = ""
+				if x + 1 <= len(sentence):
+					sentence[x+1] = ""
 			if sentence[x] == ",":
 				sentence[x-1] = ""
 
