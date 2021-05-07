@@ -1,5 +1,5 @@
 --- pyborg-irc.py.orig	2007-05-04 00:34:33.000000000 -0700
-+++ pyborg-irc.py	2009-07-28 11:35:27.000000000 -0700
++++ pyborg-irc.py	2009-07-28 18:06:36.000000000 -0700
 @@ -21,6 +21,7 @@
  #
  
@@ -162,7 +162,7 @@
 -				body = body.replace(x, "#nick")
 -		print body
 +				if len(x) > 2: # Don't bother with tiny words
-+					if x.startswith(('&', '@', '%', '+')): # Strip usermode symbols
++					if x.startswith(('&', '@', '%', '+', '~')): # Strip usermode symbols
 +						x = x[1:]
 +					body = replace_insensitive(body, ' ' + x + ' ', ' #nick ')
 +					tupunc = 0
@@ -277,7 +277,21 @@
  			# filter mirc colours out?
  			elif command_list[0] == "!nocolor" or command_list[0] == "!nocolour":
  				msg = "obsolete command "
-@@ -514,16 +626,18 @@
+@@ -456,8 +568,11 @@
+ 			# Change reply rate
+ 			elif command_list[0] == "!replyrate":
+ 				try:
+-					self.settings.reply_chance = int(command_list[1])
+-					msg = "Now replying to %d%% of messages." % int(command_list[1])
++					if int(command_list[1]) > 100:
++						self.settings.reply_chance = 100
++					else:
++						self.settings.reply_chance = int(command_list[1])
++					msg = "Now replying to %d%% of messages." % self.settings.reply_chance
+ 				except:
+ 					msg = "Reply rate is %d%%." % self.settings.reply_chance
+ 			#make the bot talk
+@@ -514,16 +629,18 @@
  				c.privmsg(source, message)
  				# send copy to owner
  				if not source in self.owners:

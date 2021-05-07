@@ -1,7 +1,14 @@
 PyBorg ChangeLog
 ~~~~~~~~~~~~~~~~
 
-Seisatsu's Mod v5.2 - 27/7/2009 (Michael D. Reiley / Seisatsu)
+Seisatsu's Mod v5.3 - 28/7/2009 (Michael D. Reiley / Seisatsu)
+
+~~~~~~~~~~~~~~~~~~
+
+* Replyrate can no longer be set above 100%.
+* Another fix for the #nick routine.
+
+Seisatsu's Mod v5.2 - 28/7/2009 (Michael D. Reiley / Seisatsu)
 
 ~~~~~~~~~~~~~~~~~~
 

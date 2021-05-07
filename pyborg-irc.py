@@ -310,7 +310,7 @@ class ModIRC(SingleServerIRCBot):
 		if e.eventtype() == "pubmsg":
 			for x in self.channels[target].users():
 				if len(x) > 2: # Don't bother with tiny words
-					if x.startswith(('&', '@', '%', '+')): # Strip usermode symbols
+					if x.startswith(('&', '@', '%', '+', '~')): # Strip usermode symbols
 						x = x[1:]
 					body = replace_insensitive(body, ' ' + x + ' ', ' #nick ')
 					tupunc = 0
@@ -568,8 +568,11 @@ class ModIRC(SingleServerIRCBot):
 			# Change reply rate
 			elif command_list[0] == "!replyrate":
 				try:
-					self.settings.reply_chance = int(command_list[1])
-					msg = "Now replying to %d%% of messages." % int(command_list[1])
+					if int(command_list[1]) > 100:
+						self.settings.reply_chance = 100
+					else:
+						self.settings.reply_chance = int(command_list[1])
+					msg = "Now replying to %d%% of messages." % self.settings.reply_chance
 				except:
 					msg = "Reply rate is %d%%." % self.settings.reply_chance
 			#make the bot talk
