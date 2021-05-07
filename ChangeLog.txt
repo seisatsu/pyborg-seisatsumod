@@ -1,6 +1,14 @@
 PyBorg ChangeLog
 ~~~~~~~~~~~~~~~~
 
+Seisatsu's Mod v3 - 18/6/2009 (Michael D. Reiley / Seisatsu)
+
+* Added inline nolearn feature (start line with ``).
+* Added inline ignore feature (start line with ```).
+* Fixed the color character filter to be more thorough.
+* Fixed a bug caused by the old color character filter.
+* Improved the special character filters.
+
 Seisatsu's Mod v2.1 (bugfix) - 2/6/2009 (Michael D. Reiley / Seisatsu)
 
 * Fixed a small bug which caused commands to sometimes be ignored if there were single-letter nicks in the room (the corresponding letter in the command would be replaced with #nick).

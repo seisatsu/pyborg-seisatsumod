@@ -1,5 +1,5 @@
 --- pyborg-irc.py.orig	2007-05-04 00:34:33.000000000 -0700
-+++ pyborg-irc.py	2009-06-02 23:02:44.000000000 -0700
++++ pyborg-irc.py	2009-06-18 20:12:55.000000000 -0700
 @@ -68,15 +68,16 @@
  
  	# Command list for this module
@@ -58,7 +58,62 @@
  
  	def on_privmsg(self, c, e):
  		self.on_msg(c, e)
-@@ -259,7 +265,8 @@
+@@ -235,18 +241,37 @@
+ 				# Ignore all the other CTCPs
+ 				return
+ 
+-		for irc_color_char in [',', "\x03"]:
+-			debut = body.rfind(irc_color_char)
+-			if 0 <= debut < 5:
+-				x = 0
+-				for x in xrange(debut+1, len(body)):
+-					if body[x].isdigit() == 0:
++		color_char = 0 #Remove IRC color strings
++		while "\x03" in body:
++			color_char = body.rfind("\x03")
++			x = 0
++			i = 0
++			if color_char + 5 < len(body):
++				while i < 5:
++					if body[color_char+1].isdigit() or body[color_char+1] == ',':
++						body = body[:color_char+1] + body[color_char+2:]
++					else:
++						body = body[:color_char] + body[color_char+1:]
+ 						break
+-				body = body[x:]
++					i += 1
++			elif color_char + 1 < len(body):
++				j = color_char+1
++				while j < len(body):
++					if body[color_char+1].isdigit() or body[color_char+1] == ',':
++						body = body[:color_char+1] + body[color_char+2:]
++					else:
++						body = body[:color_char] + body[color_char+1:]
++						break
++					j += 1
++			else:
++				body = body[:color_char] + body[color_char+1:]
+ 
+ 		#remove special irc fonts chars
+-		body = body[body.rfind("\x02")+1:]
+-		body = body[body.rfind("\xa0")+1:]
++		body = body.replace("\x02", "")
++		body = body.replace("\x1F", "")
++		body = body.replace("\x16", "")
++		body = body.replace("\x0F", "")
++		body = body.replace("\xa0", "")
+ 
+ 		# WHOOHOOO!!
+ 		if target == self.settings.myname or source == self.settings.myname:
+@@ -255,11 +280,16 @@
+ 		# Ignore self.
+ 		if source == self.settings.myname: return
+ 
++		# Completely ignore lines beginning with ``
++		if body.startswith("``"):
++			print "Line ignored"
++			return
+ 
  		#replace nicknames by "#nick"
  		if e.eventtype() == "pubmsg":
  			for x in self.channels[target].users():
@@ -68,7 +123,7 @@
  		print body
  
  		# Ignore selected nicks
-@@ -355,6 +362,23 @@
+@@ -355,6 +385,23 @@
  						msg = msg + "off"
  						self.settings.stealth = 0
  

@@ -66,6 +66,28 @@ def filter_message(message, bot):
 	except ValueError, e:
 		pass
 
+	try:
+		while 1:
+			index = message.index("[", index)
+			# Remove matching ] bracket
+			i = message.index("]", index+1)
+			message = message[0:i]+message[i+1:]
+			# And remove the [
+			message = message[0:index]+message[index+1:]
+	except ValueError, e:
+		pass
+
+	try:
+		while 1:
+			index = message.index("<", index)
+			# Remove matching > bracket
+			i = message.index(">", index+1)
+			message = message[0:i]+message[i+1:]
+			# And remove the <
+			message = message[0:index]+message[index+1:]
+	except ValueError, e:
+		pass
+
 	message = message.replace(";", ",")
 	message = message.replace("?", " ? ")
 	message = message.replace("!", " ! ")
@@ -100,7 +122,7 @@ class pyborg:
 	import re
 	import cfgfile
 
-	ver_string = "I am a version 1.1.2 PyBorg, with Seisatsu's Mod v2.1"
+	ver_string = "I am a version 1.1.2 PyBorg, with Seisatsu's Mod v3.0"
 	saves_version = "1.1.0"
 
 	# Main command list

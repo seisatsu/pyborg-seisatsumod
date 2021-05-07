@@ -241,18 +241,37 @@ class ModIRC(SingleServerIRCBot):
 				# Ignore all the other CTCPs
 				return
 
-		for irc_color_char in [',', "\x03"]:
-			debut = body.rfind(irc_color_char)
-			if 0 <= debut < 5:
-				x = 0
-				for x in xrange(debut+1, len(body)):
-					if body[x].isdigit() == 0:
+		color_char = 0 #Remove IRC color strings
+		while "\x03" in body:
+			color_char = body.rfind("\x03")
+			x = 0
+			i = 0
+			if color_char + 5 < len(body):
+				while i < 5:
+					if body[color_char+1].isdigit() or body[color_char+1] == ',':
+						body = body[:color_char+1] + body[color_char+2:]
+					else:
+						body = body[:color_char] + body[color_char+1:]
 						break
-				body = body[x:]
+					i += 1
+			elif color_char + 1 < len(body):
+				j = color_char+1
+				while j < len(body):
+					if body[color_char+1].isdigit() or body[color_char+1] == ',':
+						body = body[:color_char+1] + body[color_char+2:]
+					else:
+						body = body[:color_char] + body[color_char+1:]
+						break
+					j += 1
+			else:
+				body = body[:color_char] + body[color_char+1:]
 
 		#remove special irc fonts chars
-		body = body[body.rfind("\x02")+1:]
-		body = body[body.rfind("\xa0")+1:]
+		body = body.replace("\x02", "")
+		body = body.replace("\x1F", "")
+		body = body.replace("\x16", "")
+		body = body.replace("\x0F", "")
+		body = body.replace("\xa0", "")
 
 		# WHOOHOOO!!
 		if target == self.settings.myname or source == self.settings.myname:
@@ -261,6 +280,10 @@ class ModIRC(SingleServerIRCBot):
 		# Ignore self.
 		if source == self.settings.myname: return
 
+		# Completely ignore lines beginning with ``
+		if body.startswith("``"):
+			print "Line ignored"
+			return
 
 		#replace nicknames by "#nick"
 		if e.eventtype() == "pubmsg":
