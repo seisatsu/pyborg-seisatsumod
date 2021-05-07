@@ -1,0 +1,54 @@
+--- pyborg-irc.py.orig	2007-05-04 00:34:33.000000000 -0700
++++ pyborg-irc.py	2009-05-30 20:01:49.000000000 -0700
+@@ -72,11 +72,11 @@
+ !stealth, !unignore, !wakeup, !talk, !owner"
+ 	# Detailed command description dictionary
+ 	commanddict = {
+-		"shutup": "Owner command. Usage: !shutup\nStop the bot talking",
++		"shutup": "Owner command. Usage: !shutup\nStop the bot from talking",
+ 		"wakeup": "Owner command. Usage: !wakeup\nAllow the bot to talk",
+ 		"join": "Owner command. Usage: !join #chan1 [#chan2 [...]]\nJoin one or more channels",
+ 		"part": "Owner command. Usage: !part #chan1 [#chan2 [...]]\nLeave one or more channels",
+-		"chans": "Owner command. Usage: !chans\nList channels currently on",
++		"chans": "Owner command. Usage: !chans\nList channels currently joined",
+ 		"nick": "Owner command. Usage: !nick nickname\nChange nickname",
+ 		"ignore": "Owner command. Usage: !ignore [nick1 [nick2 [...]]]\nIgnore one or more nicknames. Without arguments it lists ignored nicknames",
+ 		"unignore": "Owner command. Usage: !unignore nick1 [nick2 [...]]\nUnignores one or more nicknames",
+@@ -84,7 +84,7 @@
+ 		"reply2ignored": "Owner command. Usage: !reply2ignored [on|off]\nAllow/disallow replying to ignored users. Without arguments shows the current setting",
+ 		"stealth": "Owner command. Usage: !stealth [on|off]\nTurn stealth mode on or off (disable non-owner commands and don't return CTCP VERSION). Without arguments shows the current setting",
+ 		"quitmsg": "Owner command. Usage: !quitmsg [message]\nSet the quit message. Without arguments show the current quit message",
+-		"talk": "Owner commande. Usage !talk nick message\nmake the bot send the sentence 'message' to 'nick'",
++		"talk": "Owner command. Usage !talk nick message\nmake the bot send the sentence 'message' to 'nick'",
+ 		"quit": "Owner command. Usage: !quit\nMake the bot quit IRC",
+ 		"owner": "Usage: !owner password\nAllow to become owner of the bot"
+ 	}
+@@ -104,13 +104,14 @@
+ 			  "owners": ("Owner(s) nickname", [ "OwnerNick" ]),
+ 			  "servers": ("IRC Server to connect to (server, port [,password])", [("irc.starchat.net", 6667)]),
+ 			  "chans": ("Channels to auto-join", ["#test"]),
++			  "rejoin_kick": ("Rejoin channel when kicked out", 0),
+ 			  "speaking": ("Allow the bot to talk on channels", 1),
+ 			  "stealth": ("Hide the fact we are a bot", 0),
+ 			  "ignorelist": ("Ignore these nicknames:", []),
+ 			  "reply2ignored": ("Reply to ignored people", 0),
+ 			  "reply_chance": ("Chance of reply (%) per message", 33),
+ 			  "quitmsg": ("IRC quit message", "Bye :-("),
+-			  "password": ("password for control the bot (Edit manually !)", "")
++			  "password": ("password to control the bot (Edit manually !)", "")
+ 			} )
+ 
+ 		self.owners = self.settings.owners[:]
+@@ -185,7 +186,11 @@
+ 			reason = ""
+ 
+ 		if kicked == self.settings.myname:
+-			print "[%s] <--  %s was kicked off %s by %s (%s)" % (get_time(), kicked, target, kicker, reason)
++			if self.settings.rejoin_kick:
++				print "[%s] <--  %s was kicked off %s by %s (%s) (REJOINING)" % (get_time(), kicked, target, kicker, reason)
++				c.join(target)
++			else:
++				print "[%s] <--  %s was kicked off %s by %s (%s)" % (get_time(), kicked, target, kicker, reason)
+ 
+ 	def on_privmsg(self, c, e):
+ 		self.on_msg(c, e)
