@@ -310,6 +310,8 @@ class ModIRC(SingleServerIRCBot):
 		if e.eventtype() == "pubmsg":
 			for x in self.channels[target].users():
 				if len(x) > 2: # Don't bother with tiny words
+					if x.startswith(('&', '@', '%', '+')): # Strip usermode symbols
+						x = x[1:]
 					body = replace_insensitive(body, ' ' + x + ' ', ' #nick ')
 					tupunc = 0
 					while tupunc < len(string.punctuation):

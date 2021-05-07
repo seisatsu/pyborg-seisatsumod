@@ -1,11 +1,17 @@
 PyBorg ChangeLog
 ~~~~~~~~~~~~~~~~
 
+Seisatsu's Mod v5.2 - 27/7/2009 (Michael D. Reiley / Seisatsu)
+
+~~~~~~~~~~~~~~~~~~
+
+* Fixed another bug in the #nick replacement routine. Nicknames of ops now have their usermode symbols stripped, so they are seen by the routine.
+
 Seisatsu's Mod v5.1 - 27/7/2009 (Michael D. Reiley / Seisatsu)
 
 ~~~~~~~~~~~~~~~~~~
 
-* Fixed some bugs in the #nick replacement routine.
+* Fixed some bugs in the #nick replacement routine. The routine now sees nicknames with adjacent punctuation, and it is no longer case sensitive.
 
 Seisatsu's Mod v5 - 25/7/2009 (Michael D. Reiley / Seisatsu)
 

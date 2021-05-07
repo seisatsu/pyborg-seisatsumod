@@ -1,5 +1,5 @@
 --- pyborg-irc.py.orig	2007-05-04 00:34:33.000000000 -0700
-+++ pyborg-irc.py	2009-07-27 23:41:49.000000000 -0700
++++ pyborg-irc.py	2009-07-28 11:35:27.000000000 -0700
 @@ -21,6 +21,7 @@
  #
  
@@ -87,7 +87,7 @@
  
  	def on_privmsg(self, c, e):
  		self.on_msg(c, e)
-@@ -235,32 +255,78 @@
+@@ -235,32 +255,80 @@
  				# Ignore all the other CTCPs
  				return
  
@@ -162,6 +162,8 @@
 -				body = body.replace(x, "#nick")
 -		print body
 +				if len(x) > 2: # Don't bother with tiny words
++					if x.startswith(('&', '@', '%', '+')): # Strip usermode symbols
++						x = x[1:]
 +					body = replace_insensitive(body, ' ' + x + ' ', ' #nick ')
 +					tupunc = 0
 +					while tupunc < len(string.punctuation):
@@ -182,7 +184,7 @@
  
  		# Ignore selected nicks
  		if self.settings.ignorelist.count(source.lower()) > 0 \
-@@ -279,26 +345,19 @@
+@@ -279,26 +347,19 @@
  		if body == "":
  			return
  
@@ -217,7 +219,7 @@
  
  		# Pass message onto pyborg
  		if source in self.owners and e.source() in self.owner_mask:
-@@ -355,6 +414,57 @@
+@@ -355,6 +416,57 @@
  						msg = msg + "off"
  						self.settings.stealth = 0
  
@@ -275,7 +277,7 @@
  			# filter mirc colours out?
  			elif command_list[0] == "!nocolor" or command_list[0] == "!nocolour":
  				msg = "obsolete command "
-@@ -514,16 +624,18 @@
+@@ -514,16 +626,18 @@
  				c.privmsg(source, message)
  				# send copy to owner
  				if not source in self.owners:
