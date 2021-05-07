@@ -1,11 +1,11 @@
 --- pyborg.py.orig	2007-11-11 21:49:28.000000000 -0800
-+++ pyborg.py	2009-05-31 16:07:09.000000000 -0700
++++ pyborg.py	2009-06-02 21:36:45.000000000 -0700
 @@ -100,7 +100,7 @@
  	import re
  	import cfgfile
  
 -	ver_string = "I am a version 1.1.0 PyBorg"
-+	ver_string = "I am a version 1.1.2 PyBorg, with Seisatsu's Mod v2."
++	ver_string = "I am a version 1.1.2 PyBorg, with Seisatsu's Mod v2.1"
  	saves_version = "1.1.0"
  
  	# Main command list

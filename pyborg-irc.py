@@ -265,7 +265,8 @@ class ModIRC(SingleServerIRCBot):
 		#replace nicknames by "#nick"
 		if e.eventtype() == "pubmsg":
 			for x in self.channels[target].users():
-				body = body.replace(x, "#nick")
+				if not body.startswith("!"):
+					body = body.replace(x, "#nick")
 		print body
 
 		# Ignore selected nicks

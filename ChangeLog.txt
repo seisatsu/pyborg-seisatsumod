@@ -1,6 +1,10 @@
 PyBorg ChangeLog
 ~~~~~~~~~~~~~~~~
 
+Seisatsu's Mod v2.1 (bugfix) - 2/6/2009 (Michael D. Reiley / Seisatsu)
+
+* Fixed a small bug which caused commands to sometimes be ignored if there were single-letter nicks in the room (the corresponding letter in the command would be replaced with #nick).
+
 Seisatsu's Mod v2 - 31/5/2009 (Michael D. Reiley / Seisatsu)
 ~~~~~~~~~~~~~~~~~~
 
