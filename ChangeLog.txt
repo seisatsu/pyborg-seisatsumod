@@ -1,6 +1,12 @@
 PyBorg ChangeLog
 ~~~~~~~~~~~~~~~~
 
+Seisatsu's Mod v5.1 - 27/7/2009 (Michael D. Reiley / Seisatsu)
+
+~~~~~~~~~~~~~~~~~~
+
+* Fixed some bugs in the #nick replacement routine.
+
 Seisatsu's Mod v5 - 25/7/2009 (Michael D. Reiley / Seisatsu)
 
 ~~~~~~~~~~~~~~~~~~

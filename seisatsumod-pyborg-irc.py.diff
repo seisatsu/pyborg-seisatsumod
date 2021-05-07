@@ -1,6 +1,29 @@
 --- pyborg-irc.py.orig	2007-05-04 00:34:33.000000000 -0700
-+++ pyborg-irc.py	2009-07-25 23:42:03.000000000 -0700
-@@ -68,23 +68,26 @@
++++ pyborg-irc.py	2009-07-27 23:41:49.000000000 -0700
+@@ -21,6 +21,7 @@
+ #
+ 
+ import sys
++import re
+ 
+ try:
+ 	from ircbot import *
+@@ -50,6 +51,14 @@
+ 	"""
+ 	return time.strftime("%H:%M:%S", time.localtime(time.time()))
+ 
++def replace_insensitive(string, target, replacement):
++    no_case = string.lower()
++    index = no_case.find(target.lower())
++    if index >= 0:
++        result = string[:index] + replacement + string[index + len(target):]
++        return result
++    else: # no results so return the original string
++        return string
+ 
+ class ModIRC(SingleServerIRCBot):
+ 	"""
+@@ -68,23 +77,26 @@
  
  	# Command list for this module
  	commandlist =   "IRC Module Commands:\n!chans, !ignore, \
@@ -32,7 +55,7 @@
  		"quit": "Owner command. Usage: !quit\nMake the bot quit IRC",
  		"owner": "Usage: !owner password\nAllow to become owner of the bot"
  	}
-@@ -104,13 +107,17 @@
+@@ -104,13 +116,17 @@
  			  "owners": ("Owner(s) nickname", [ "OwnerNick" ]),
  			  "servers": ("IRC Server to connect to (server, port [,password])", [("irc.starchat.net", 6667)]),
  			  "chans": ("Channels to auto-join", ["#test"]),
@@ -51,7 +74,7 @@
  			} )
  
  		self.owners = self.settings.owners[:]
-@@ -185,7 +192,11 @@
+@@ -185,7 +201,11 @@
  			reason = ""
  
  		if kicked == self.settings.myname:
@@ -64,7 +87,7 @@
  
  	def on_privmsg(self, c, e):
  		self.on_msg(c, e)
-@@ -235,32 +246,68 @@
+@@ -235,32 +255,78 @@
  				# Ignore all the other CTCPs
  				return
  
@@ -139,17 +162,27 @@
 -				body = body.replace(x, "#nick")
 -		print body
 +				if len(x) > 2: # Don't bother with tiny words
-+					body = body.replace(' ' + x + ' ', ' #nick ')
-+					if body.startswith(x + ' '):
++					body = replace_insensitive(body, ' ' + x + ' ', ' #nick ')
++					tupunc = 0
++					while tupunc < len(string.punctuation):
++						puncind = tuple(string.punctuation)[tupunc]
++						body = replace_insensitive(body, ' ' + x + puncind, ' #nick' + puncind)
++						body = replace_insensitive(body, puncind + x + ' ', puncind + '#nick ')
++						if body.lower().startswith(x.lower() + puncind):
++							body = '#nick' + puncind + body[len(x)+1:]
++						tupunc += 1
++					if body.lower() == x.lower():
++						body = '#nick'
++					if body.lower().startswith(x.lower() + ' '):
 +						body = '#nick ' + body[len(x)+1:]
-+					if body.endswith(' ' + x):
++					if body.lower().endswith(' ' + x.lower()):
 +						body = body[:(len(body))-(len(x)+1)] + ' #nick'
 +
 +		print "[%s] <%s> > %s> %s" % ( get_time(), source, target, body)
  
  		# Ignore selected nicks
  		if self.settings.ignorelist.count(source.lower()) > 0 \
-@@ -279,26 +326,19 @@
+@@ -279,26 +345,19 @@
  		if body == "":
  			return
  
@@ -184,7 +217,7 @@
  
  		# Pass message onto pyborg
  		if source in self.owners and e.source() in self.owner_mask:
-@@ -355,6 +395,57 @@
+@@ -355,6 +414,57 @@
  						msg = msg + "off"
  						self.settings.stealth = 0
  
@@ -242,7 +275,7 @@
  			# filter mirc colours out?
  			elif command_list[0] == "!nocolor" or command_list[0] == "!nocolour":
  				msg = "obsolete command "
-@@ -514,16 +605,18 @@
+@@ -514,16 +624,18 @@
  				c.privmsg(source, message)
  				# send copy to owner
  				if not source in self.owners:

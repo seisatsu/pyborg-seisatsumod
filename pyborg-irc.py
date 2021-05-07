@@ -21,6 +21,7 @@
 #
 
 import sys
+import re
 
 try:
 	from ircbot import *
@@ -50,6 +51,14 @@ def get_time():
 	"""
 	return time.strftime("%H:%M:%S", time.localtime(time.time()))
 
+def replace_insensitive(string, target, replacement):
+    no_case = string.lower()
+    index = no_case.find(target.lower())
+    if index >= 0:
+        result = string[:index] + replacement + string[index + len(target):]
+        return result
+    else: # no results so return the original string
+        return string
 
 class ModIRC(SingleServerIRCBot):
 	"""
@@ -301,10 +310,20 @@ class ModIRC(SingleServerIRCBot):
 		if e.eventtype() == "pubmsg":
 			for x in self.channels[target].users():
 				if len(x) > 2: # Don't bother with tiny words
-					body = body.replace(' ' + x + ' ', ' #nick ')
-					if body.startswith(x + ' '):
+					body = replace_insensitive(body, ' ' + x + ' ', ' #nick ')
+					tupunc = 0
+					while tupunc < len(string.punctuation):
+						puncind = tuple(string.punctuation)[tupunc]
+						body = replace_insensitive(body, ' ' + x + puncind, ' #nick' + puncind)
+						body = replace_insensitive(body, puncind + x + ' ', puncind + '#nick ')
+						if body.lower().startswith(x.lower() + puncind):
+							body = '#nick' + puncind + body[len(x)+1:]
+						tupunc += 1
+					if body.lower() == x.lower():
+						body = '#nick'
+					if body.lower().startswith(x.lower() + ' '):
 						body = '#nick ' + body[len(x)+1:]
-					if body.endswith(' ' + x):
+					if body.lower().endswith(' ' + x.lower()):
 						body = body[:(len(body))-(len(x)+1)] + ' #nick'
 
 		print "[%s] <%s> > %s> %s" % ( get_time(), source, target, body)

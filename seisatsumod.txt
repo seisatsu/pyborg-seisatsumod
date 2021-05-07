@@ -1,5 +1,5 @@
-Seisatsu's Mod Version 5 by Michael D. Reiley (Seisatsu)
-07/25/2009
+Seisatsu's Mod Version 5.1 by Michael D. Reiley (Seisatsu)
+07/27/2009
 ~~~~~~~~~~~~~~~
 
 This is a fork of PyBorg Version 1.1.2, with the following modifications:
