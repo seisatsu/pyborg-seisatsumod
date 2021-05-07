@@ -1,6 +1,13 @@
 PyBorg ChangeLog
 ~~~~~~~~~~~~~~~~
 
+Seisatsu's Mod v5 - 25/7/2009 (Michael D. Reiley / Seisatsu)
+
+~~~~~~~~~~~~~~~~~~
+
+* Added notify option to disable annoying private message / CTCP notifications to owners.
+* Added !notify command.
+
 Seisatsu's Mod v4 - 24/6/2009 (Michael D. Reiley / Seisatsu)
 
 ~~~~~~~~~~~~~~~~~~

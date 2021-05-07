@@ -69,7 +69,7 @@ class ModIRC(SingleServerIRCBot):
 	# Command list for this module
 	commandlist =   "IRC Module Commands:\n!chans, !ignore, \
 !join, !rejoin, !nick, !part, !quit, !quitmsg, !reply2ignored, !replyrate, !shutup, \
-!stealth, !unignore, !logging, !wakeup, !talk, !owner"
+!stealth, !unignore, !logging, !notify, !wakeup, !talk, !owner"
 	# Detailed command description dictionary
 	commanddict = {
 		"shutup": "Owner command. Usage: !shutup\nStop the bot from talking",
@@ -82,6 +82,7 @@ class ModIRC(SingleServerIRCBot):
 		"ignore": "Owner command. Usage: !ignore [nick1 [nick2 [...]]]\nIgnore one or more nicknames. Without arguments it lists ignored nicknames",
 		"unignore": "Owner command. Usage: !unignore nick1 [nick2 [...]]\nUnignores one or more nicknames",
 		"logging": "Owner command. Usage: !logging [on|off]\nEnables or disables writing to a logfile",
+		"notify": "Owner command. Usage: !notify [on|off]\nEnables or disables private message and CTCP notifications to owners",
 		"replyrate": "Owner command. Usage: !replyrate [rate%]\nSet rate of bot replies to rate%. Without arguments (not an owner-only command) shows the current reply rate",
 		"reply2ignored": "Owner command. Usage: !reply2ignored [on|off]\nAllow/disallow replying to ignored users. Without arguments shows the current setting",
 		"stealth": "Owner command. Usage: !stealth [on|off]\nTurn stealth mode on or off (disable non-owner commands and don't return CTCP VERSION). Without arguments shows the current setting",
@@ -108,6 +109,7 @@ class ModIRC(SingleServerIRCBot):
 			  "chans": ("Channels to auto-join", ["#test"]),
 			  "rejoin_kick": ("Rejoin channel when kicked out", 0),
 			  "logging": ("Enable or disable writing to a logfile", 0),
+			  "notify" : ("Enable or disable private message and CTCP notifications to owners", 1),
 			  "logfile": ("If logging is enabled, name of logfile", "log.txt"),
 			  "speaking": ("Allow the bot to talk on channels", 1),
 			  "stealth": ("Hide the fact we are a bot", 0),
@@ -410,6 +412,23 @@ class ModIRC(SingleServerIRCBot):
 						msg = msg + "off"
 						self.settings.logging = 0
 
+			# Enable/disable notifications
+			elif command_list[0] == "!notify":
+				msg = "Notifications "
+				if len(command_list) == 1:
+					if self.settings.notify == 0:
+						msg = msg + "off"
+					else:
+						msg = msg + "on"
+				else:
+					toggle = command_list[1].lower()
+					if toggle == "on":
+						msg = msg + "on"
+						self.settings.notify = 1
+					else:
+						msg = msg + "off"
+						self.settings.notify = 0
+
 			# Enable/disable rejoin on kick
 			elif command_list[0] == "!rejoin":
 				msg = "Rejoin setting "
@@ -586,16 +605,18 @@ class ModIRC(SingleServerIRCBot):
 				c.privmsg(source, message)
 				# send copy to owner
 				if not source in self.owners:
-					c.privmsg(','.join(self.owners), "(From "+source+") "+body)
-					c.privmsg(','.join(self.owners), "(To   "+source+") "+message)
+					if self.settings.notify:
+						c.privmsg(','.join(self.owners), "(From "+source+") "+body)
+						c.privmsg(','.join(self.owners), "(To   "+source+") "+message)
 			# ctcp action priv msg
 			else:
 				print "[%s] <%s> > %s> /me %s" % ( get_time(), self.settings.myname, target, message)
 				c.action(source, message)
 				# send copy to owner
 				if not source in self.owners:
-					map ( ( lambda x: c.action(x, "(From "+source+") "+body) ), self.owners)
-					map ( ( lambda x: c.action(x, "(To   "+source+") "+message) ), self.owners)
+					if self.settings.notify:
+						map ( ( lambda x: c.action(x, "(From "+source+") "+body) ), self.owners)
+						map ( ( lambda x: c.action(x, "(To   "+source+") "+message) ), self.owners)
 
 if __name__ == "__main__":
 	

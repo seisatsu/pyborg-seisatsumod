@@ -1,5 +1,5 @@
-Seisatsu's Mod Version 4 by Michael D. Reiley (Seisatsu)
-06/18/2009
+Seisatsu's Mod Version 5 by Michael D. Reiley (Seisatsu)
+07/25/2009
 ~~~~~~~~~~~~~~~
 
 This is a fork of PyBorg Version 1.1.2, with the following modifications:
@@ -9,11 +9,11 @@ This is a fork of PyBorg Version 1.1.2, with the following modifications:
 * The !rejoin command, which enables or disables the auto rejoin feature.
 * Improved/fixed special character filters.
 * Added inline ignore feature (start line with ``).
-* Fixed a mistake from version 3.1
 * Owner commands can now be used in public channels.
 * PyBorg temporarily doubles its replyrate if its nickname is heard.
 * All messages from all users are now labeled and timestamped.
 * Ability to log irc chats.
+* Ability to disable PM / CTCP notifications.
 * Bugfixes.
 
 ~~~~~
