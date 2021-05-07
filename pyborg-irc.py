@@ -285,6 +285,17 @@ class ModIRC(SingleServerIRCBot):
 			print "Line ignored"
 			return
 
+		# We want replies reply_chance%, if speaking is on
+		replyrate = self.settings.speaking * self.settings.reply_chance
+
+		# Always reply to private messages
+		if e.eventtype() == "privmsg":
+			replyrate = 100
+
+		# double reply chance if the text contains our nickname :-)
+		if body.lower().find(self.settings.myname.lower() ) != -1:
+			replyrate = replyrate * 2
+
 		#replace nicknames by "#nick"
 		if e.eventtype() == "pubmsg":
 			for x in self.channels[target].users():
@@ -314,21 +325,9 @@ class ModIRC(SingleServerIRCBot):
 			print "Ignoring quoted text"
 			return
 
-		# We want replies reply_chance%, if speaking is on
-		replyrate = self.settings.speaking * self.settings.reply_chance
-
-		# double reply chance if the text contains our nickname :-)
-		if body.lower().find(self.settings.myname.lower() ) != -1:
-			replyrate = replyrate * 2
-
-		# Always reply to private messages
-		if e.eventtype() == "privmsg":
-			replyrate = 100
-
-			# Parse ModIRC commands
-			if body[0] == "!":
-				if self.irc_commands(body, source, target, c, e) == 1:return
-
+		# Parse ModIRC commands
+		if body[0] == "!":
+			if self.irc_commands(body, source, target, c, e) == 1:return
 
 		# Pass message onto pyborg
 		if source in self.owners and e.source() in self.owner_mask:

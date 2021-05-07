@@ -1,5 +1,5 @@
 --- pyborg.py.orig	2007-11-11 21:49:28.000000000 -0800
-+++ pyborg.py	2009-06-18 20:18:18.000000000 -0700
++++ pyborg.py	2009-06-22 21:01:48.000000000 -0700
 @@ -66,6 +66,28 @@
  	except ValueError, e:
  		pass
@@ -34,7 +34,7 @@
  	import cfgfile
  
 -	ver_string = "I am a version 1.1.0 PyBorg"
-+	ver_string = "I am a version 1.1.2 PyBorg, with Seisatsu's Mod v3.0"
++	ver_string = "I am a version 1.1.2 PyBorg, with Seisatsu's Mod v3.1.1"
  	saves_version = "1.1.0"
  
  	# Main command list

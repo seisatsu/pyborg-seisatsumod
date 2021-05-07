@@ -1,5 +1,5 @@
 --- pyborg-irc.py.orig	2007-05-04 00:34:33.000000000 -0700
-+++ pyborg-irc.py	2009-06-18 20:12:55.000000000 -0700
++++ pyborg-irc.py	2009-06-22 21:01:01.000000000 -0700
 @@ -68,15 +68,16 @@
  
  	# Command list for this module
@@ -105,7 +105,7 @@
  
  		# WHOOHOOO!!
  		if target == self.settings.myname or source == self.settings.myname:
-@@ -255,11 +280,16 @@
+@@ -255,11 +280,27 @@
  		# Ignore self.
  		if source == self.settings.myname: return
  
@@ -113,6 +113,17 @@
 +		if body.startswith("``"):
 +			print "Line ignored"
 +			return
++
++		# We want replies reply_chance%, if speaking is on
++		replyrate = self.settings.speaking * self.settings.reply_chance
++
++		# Always reply to private messages
++		if e.eventtype() == "privmsg":
++			replyrate = 100
++
++		# double reply chance if the text contains our nickname :-)
++		if body.lower().find(self.settings.myname.lower() ) != -1:
++			replyrate = replyrate * 2
  
  		#replace nicknames by "#nick"
  		if e.eventtype() == "pubmsg":
@@ -123,7 +134,32 @@
  		print body
  
  		# Ignore selected nicks
-@@ -355,6 +385,23 @@
+@@ -284,21 +325,9 @@
+ 			print "Ignoring quoted text"
+ 			return
+ 
+-		# We want replies reply_chance%, if speaking is on
+-		replyrate = self.settings.speaking * self.settings.reply_chance
+-
+-		# double reply chance if the text contains our nickname :-)
+-		if body.lower().find(self.settings.myname.lower() ) != -1:
+-			replyrate = replyrate * 2
+-
+-		# Always reply to private messages
+-		if e.eventtype() == "privmsg":
+-			replyrate = 100
+-
+-			# Parse ModIRC commands
+-			if body[0] == "!":
+-				if self.irc_commands(body, source, target, c, e) == 1:return
+-
++		# Parse ModIRC commands
++		if body[0] == "!":
++			if self.irc_commands(body, source, target, c, e) == 1:return
+ 
+ 		# Pass message onto pyborg
+ 		if source in self.owners and e.source() in self.owner_mask:
+@@ -355,6 +384,23 @@
  						msg = msg + "off"
  						self.settings.stealth = 0
  
