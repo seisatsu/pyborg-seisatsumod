@@ -69,7 +69,7 @@ class ModIRC(SingleServerIRCBot):
 	# Command list for this module
 	commandlist =   "IRC Module Commands:\n!chans, !ignore, \
 !join, !rejoin, !nick, !part, !quit, !quitmsg, !reply2ignored, !replyrate, !shutup, \
-!stealth, !unignore, !wakeup, !talk, !owner"
+!stealth, !unignore, !logging, !wakeup, !talk, !owner"
 	# Detailed command description dictionary
 	commanddict = {
 		"shutup": "Owner command. Usage: !shutup\nStop the bot from talking",
@@ -81,6 +81,7 @@ class ModIRC(SingleServerIRCBot):
 		"nick": "Owner command. Usage: !nick nickname\nChange nickname",
 		"ignore": "Owner command. Usage: !ignore [nick1 [nick2 [...]]]\nIgnore one or more nicknames. Without arguments it lists ignored nicknames",
 		"unignore": "Owner command. Usage: !unignore nick1 [nick2 [...]]\nUnignores one or more nicknames",
+		"logging": "Owner command. Usage: !logging [on|off]\nEnables or disables writing to a logfile",
 		"replyrate": "Owner command. Usage: !replyrate [rate%]\nSet rate of bot replies to rate%. Without arguments (not an owner-only command) shows the current reply rate",
 		"reply2ignored": "Owner command. Usage: !reply2ignored [on|off]\nAllow/disallow replying to ignored users. Without arguments shows the current setting",
 		"stealth": "Owner command. Usage: !stealth [on|off]\nTurn stealth mode on or off (disable non-owner commands and don't return CTCP VERSION). Without arguments shows the current setting",
@@ -106,6 +107,8 @@ class ModIRC(SingleServerIRCBot):
 			  "servers": ("IRC Server to connect to (server, port [,password])", [("irc.starchat.net", 6667)]),
 			  "chans": ("Channels to auto-join", ["#test"]),
 			  "rejoin_kick": ("Rejoin channel when kicked out", 0),
+			  "logging": ("Enable or disable writing to a logfile", 0),
+			  "logfile": ("If logging is enabled, name of logfile", "log.txt"),
 			  "speaking": ("Allow the bot to talk on channels", 1),
 			  "stealth": ("Hide the fact we are a bot", 0),
 			  "ignorelist": ("Ignore these nicknames:", []),
@@ -273,10 +276,6 @@ class ModIRC(SingleServerIRCBot):
 		body = body.replace("\x0F", "")
 		body = body.replace("\xa0", "")
 
-		# WHOOHOOO!!
-		if target == self.settings.myname or source == self.settings.myname:
-			print "[%s] <%s> > %s> %s" % ( get_time(), source, target, body)
-
 		# Ignore self.
 		if source == self.settings.myname: return
 
@@ -305,7 +304,8 @@ class ModIRC(SingleServerIRCBot):
 						body = '#nick ' + body[len(x)+1:]
 					if body.endswith(' ' + x):
 						body = body[:(len(body))-(len(x)+1)] + ' #nick'
-		print body
+
+		print "[%s] <%s> > %s> %s" % ( get_time(), source, target, body)
 
 		# Ignore selected nicks
 		if self.settings.ignorelist.count(source.lower()) > 0 \
@@ -323,6 +323,11 @@ class ModIRC(SingleServerIRCBot):
 
 		if body == "":
 			return
+
+		# If logging is on, write body to logfile
+		if self.settings.logging:
+			loghandle = open(self.settings.logfile, 'a')
+			loghandle.write("[%s] <%s> > %s> %s\n" % ( get_time(), source, target, body))
 
 		# Ignore quoted messages
 		if body[0] == "<" or body[0:1] == "\"" or body[0:1] == " <":
@@ -387,6 +392,23 @@ class ModIRC(SingleServerIRCBot):
 					else:
 						msg = msg + "off"
 						self.settings.stealth = 0
+
+			# Enable/disable logging
+			elif command_list[0] == "!logging":
+				msg = "Logging "
+				if len(command_list) == 1:
+					if self.settings.logging == 0:
+						msg = msg + "off"
+					else:
+						msg = msg + "on"
+				else:
+					toggle = command_list[1].lower()
+					if toggle == "on":
+						msg = msg + "on"
+						self.settings.logging = 1
+					else:
+						msg = msg + "off"
+						self.settings.logging = 0
 
 			# Enable/disable rejoin on kick
 			elif command_list[0] == "!rejoin":

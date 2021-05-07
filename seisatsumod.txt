@@ -1,4 +1,4 @@
-Seisatsu's Mod Version 3.2 by Michael D. Reiley (Seisatsu)
+Seisatsu's Mod Version 4 by Michael D. Reiley (Seisatsu)
 06/18/2009
 ~~~~~~~~~~~~~~~
 
@@ -12,6 +12,8 @@ This is a fork of PyBorg Version 1.1.2, with the following modifications:
 * Fixed a mistake from version 3.1
 * Owner commands can now be used in public channels.
 * PyBorg temporarily doubles its replyrate if its nickname is heard.
+* All messages from all users are now labeled and timestamped.
+* Ability to log irc chats.
 * Bugfixes.
 
 ~~~~~

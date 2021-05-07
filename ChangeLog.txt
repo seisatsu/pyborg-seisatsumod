@@ -1,6 +1,15 @@
 PyBorg ChangeLog
 ~~~~~~~~~~~~~~~~
 
+Seisatsu's Mod v4 - 24/6/2009 (Michael D. Reiley / Seisatsu)
+
+~~~~~~~~~~~~~~~~~~
+
+* All messages from all users are now labeled and timestamped.
+* Added irc logging function.
+* Added !logging command to enable or disable logging while running.
+* Added logging and logfile settings to configuration
+
 Seisatsu's Mod v3.2 (Bugfix) - 24/6/2009 (Michael D. Reiley / Seisatsu)
 
 ~~~~~~~~~~~~~~~~~~

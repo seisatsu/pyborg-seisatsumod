@@ -122,7 +122,7 @@ class pyborg:
 	import re
 	import cfgfile
 
-	ver_string = "I am a version 1.1.2 PyBorg, with Seisatsu's Mod v3.2"
+	ver_string = "I am a version 1.1.2 PyBorg, with Seisatsu's Mod v4"
 	saves_version = "1.1.0"
 
 	# Main command list
