@@ -1,0 +1,22 @@
+Seisatsu's Mod Version 2.1 by Michael D. Reiley (Seisatsu)
+05/31/2009
+~~~~~~~~~~~~~~~
+
+This is a standard version 1.1.2 PyBorg, with the following modifications:
+
+* A large number of typos were fixed.
+* The added ability to automatically rejoin a channel after being kicked. This ability can be enabled in the pyborg-irc configuration file.
+* The !rejoin command, which enables or disables the auto rejoin feature.
+* Bugfixes.
+
+~~~~~
+
+This archive also includes the original, unpatched files, and the diff files used to patch them. Also added are the required IRC libraries, which are not included in the standard distribution.
+
+~~~~~
+
+Original project at http://gna.org/projects/pyborg
+Seisatsu's Mod at http://b3net.info/
+
+Please email questions or comments to blahboybang@gmail.com
+
