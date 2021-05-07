@@ -68,13 +68,14 @@ class ModIRC(SingleServerIRCBot):
 
 	# Command list for this module
 	commandlist =   "IRC Module Commands:\n!chans, !ignore, \
-!join, !nick, !part, !quit, !quitmsg, !reply2ignored, !replyrate, !shutup, \
+!join, !rejoin, !nick, !part, !quit, !quitmsg, !reply2ignored, !replyrate, !shutup, \
 !stealth, !unignore, !wakeup, !talk, !owner"
 	# Detailed command description dictionary
 	commanddict = {
 		"shutup": "Owner command. Usage: !shutup\nStop the bot from talking",
 		"wakeup": "Owner command. Usage: !wakeup\nAllow the bot to talk",
 		"join": "Owner command. Usage: !join #chan1 [#chan2 [...]]\nJoin one or more channels",
+		"rejoin": "Owner command. Usage: !rejoin [on|off]\nEnable or disable rejoining a channel after being kicked. Without arguments shows the current setting",
 		"part": "Owner command. Usage: !part #chan1 [#chan2 [...]]\nLeave one or more channels",
 		"chans": "Owner command. Usage: !chans\nList channels currently joined",
 		"nick": "Owner command. Usage: !nick nickname\nChange nickname",
@@ -359,6 +360,23 @@ class ModIRC(SingleServerIRCBot):
 					else:
 						msg = msg + "off"
 						self.settings.stealth = 0
+
+			# Enable/disable rejoin on kick
+			elif command_list[0] == "!rejoin":
+				msg = "Rejoin setting "
+				if len(command_list) == 1:
+					if self.settings.rejoin_kick == 0:
+						msg = msg + "off"
+					else:
+						msg = msg + "on"
+				else:
+					toggle = command_list[1].lower()
+					if toggle == "on":
+						msg = msg + "on"
+						self.settings.rejoin_kick = 1
+					else:
+						msg = msg + "off"
+						self.settings.rejoin_kick = 0
 
 			# filter mirc colours out?
 			elif command_list[0] == "!nocolor" or command_list[0] == "!nocolour":

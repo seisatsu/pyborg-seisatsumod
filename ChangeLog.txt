@@ -1,6 +1,11 @@
 PyBorg ChangeLog
 ~~~~~~~~~~~~~~~~
 
+Seisatsu's Mod v2 - 31/5/2009 (Michael D. Reiley / Seisatsu)
+~~~~~~~~~~~~~~~~~~
+
+* Added the !rejoin command to enable/disable the auto rejoin feature while running.
+
 Seisatsu's Mod - 30/5/2009 (Michael D. Reiley / Seisatsu)
 ~~~~~~~~~~~~~~~~~~
 
